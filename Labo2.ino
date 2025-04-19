@@ -44,7 +44,7 @@ void SPcontrol()
   {
     if(buttonUpState == HIGH)
     {
-      Setpoint += 1;
+      Setpoint += 5;
       if(Setpoint > 100)
       {
         Setpoint = 100;
@@ -56,7 +56,7 @@ void SPcontrol()
   {
     if(buttonDownState == HIGH)
     {
-      Setpoint -= 1;
+      Setpoint -= 5;
       if(Setpoint < 0)
       {
         Setpoint = 0;
@@ -114,6 +114,15 @@ void loop()
   Input = analogRead(0);
   myPID.Compute();
   analogWrite(9,Output);
+
+  if(Input > 70) //PV > 70%. Hay que hacer (Input*100/255)?
+  {
+    digitalWrite(relePin, HIGH); //Abro la válvula
+  }
+  else
+  {
+    digitalWrite(relePin, LOW); //Cierro la válvula
+  }
 
   //Código LCD
   //Imprime en el display
