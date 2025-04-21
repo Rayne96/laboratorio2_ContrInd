@@ -94,9 +94,10 @@ void setup()
   //Setea el cursor a la columna 0, linea 1 (La de arriba es la 0, la de abajo es la 1)
   lcd.setCursor(0, 1);
 
-  pinMode(buttonUp, INPUT_PULLUP);
-  pinMode(buttonDown, INPUT_PULLUP);
+  pinMode(buttonUp, INPUT);
+  pinMode(buttonDown, INPUT);
   pinMode(relePin, OUTPUT);
+  //Faltaria el de PWM
 
   //Código Serial
   Serial.begin(9600);
@@ -115,7 +116,7 @@ void loop()
   myPID.Compute();
   analogWrite(9,Output);
 
-  if(Input > 70) //PV > 70%. Hay que hacer (Input*100/255)?
+  if(Input > 70) //PV > 70%. Hay que hacer (Input*100/256)?
   {
     digitalWrite(relePin, HIGH); //Abro la válvula
   }
