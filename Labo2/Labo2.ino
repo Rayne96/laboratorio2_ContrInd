@@ -49,6 +49,7 @@ void SPcontrol()
       {
         Setpoint = 100;
       }
+      _delay_ms(100);
     }
   }
 
@@ -61,6 +62,7 @@ void SPcontrol()
       {
         Setpoint = 0;
       }
+      _delay_ms(100);
     }
   }
 
@@ -90,9 +92,8 @@ void setup()
   //Esto siempre es así por las columnas y filas del display 
   lcd.begin(16, 2);
   lcd.clear();
-  lcd.print("Control de nivel"); //Justo tiene 16 caracteres, entra centrado en el display
   //Setea el cursor a la columna 0, linea 1 (La de arriba es la 0, la de abajo es la 1)
-  lcd.setCursor(0, 1);
+  //lcd.setCursor(0, 1);
 
   pinMode(buttonUp, INPUT);
   pinMode(buttonDown, INPUT);
@@ -116,7 +117,9 @@ void loop()
   myPID.Compute();
   analogWrite(9,Output);
 
-  if(Input > 70) //PV > 70%. Hay que hacer (Input*100/256)?
+  Input = Input*100/1023;
+
+  if(Input > 70)
   {
     digitalWrite(relePin, HIGH); //Abro la válvula
   }
@@ -127,12 +130,13 @@ void loop()
 
   //Código LCD
   //Imprime en el display
+  lcd.clear();
+  lcd.print("Control de nivel"); //Justo tiene 16 caracteres, entra centrado en el display
+  lcd.setCursor(0, 1);
   lcd.print(" PV " + String(int(trunc(Input))) + "% " + "SP " + String(int(trunc(Setpoint))) + "%"); 
  
-  //Con esto vamos siempre a sobreescribir la segunda linea
-  //que tiene el SP y el PV en % de nivel
-  lcd.setCursor(0, 1);
-  //_delay_ms(10);
+  //Con esto vamos siempre a sobreescribir la pantalla, quiza requiera delay
+  _delay_ms(10);
 
   //Código Serial
   timer.tick();
