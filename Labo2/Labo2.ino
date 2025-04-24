@@ -70,7 +70,7 @@ void SPcontrol()
 
 bool printPV(void *)
 {
-  Serial.print(Input);
+  Serial.println(Input);
   return true; //true mantiene el timer activo
 }
 
@@ -127,11 +127,12 @@ void loop()
 
   //Código LCD
   //Imprime en el display
-  lcd.print(" PV " + String(Input) + "% " + "SP " + String(Setpoint) + "%"); 
-  
+  lcd.print(" PV " + String(int(trunc(Input))) + "% " + "SP " + String(int(trunc(Setpoint))) + "%"); 
+ 
   //Con esto vamos siempre a sobreescribir la segunda linea
   //que tiene el SP y el PV en % de nivel
   lcd.setCursor(0, 1);
+  //_delay_ms(10);
 
   //Código Serial
   timer.tick();
