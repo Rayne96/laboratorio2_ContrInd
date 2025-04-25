@@ -28,6 +28,7 @@ double Setpoint, Input, Output; // Respectivamente, SP, PV, Salida
 //Estos K se van toqueteando para tunear la corrección
 //Hay una libreria de autotuning, pero por lo pronto veamos con los default que son 2, 5, 1
 double Kp = 2.0, Ki = 5.0, Kd = 1.0;
+double securityBand = 5.0;
 
 //Constructor del PID
 PID myPID(&Input, &Output, &Setpoint,Kp,Ki,Kd, DIRECT);
@@ -72,7 +73,13 @@ void SPcontrol()
 
 bool printPV(void *)
 {
-  Serial.println(Input);
+  Serial.println("PV " + String(Input));
+  return true; //true mantiene el timer activo
+}
+
+bool printOP(void *)
+{
+  Serial.println("PWM " + String(Output));
   return true; //true mantiene el timer activo
 }
 
@@ -103,6 +110,7 @@ void setup()
   //Código Serial
   Serial.begin(9600);
   timer.every(500, printPV); //Cada 500 ms hacete esa funcion
+  timer.every(500, printOP);
 }
 
 void loop() 
@@ -119,13 +127,16 @@ void loop()
 
   Input = Input*100/1023;
 
-  if(Input > 70)
+  if(Input > 70 || Input > Setpoint)
   {
     digitalWrite(relePin, HIGH); //Abro la válvula
   }
   else
   {
-    digitalWrite(relePin, LOW); //Cierro la válvula
+    if(digitalRead(relePin == HIGH) && Input <= Setpoint-securityBand)
+    {
+      digitalWrite(relePin, LOW); //Cierro la válvula
+    }
   }
 
   //Código LCD
