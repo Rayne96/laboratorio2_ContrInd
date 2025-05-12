@@ -127,13 +127,13 @@ void loop()
 
   Input = Input*100/1023;
 
-  if(Input > 70 || Input > Setpoint)
+  if(Input > 70)
   {
     digitalWrite(relePin, HIGH); //Abro la válvula
   }
   else
   {
-    if(digitalRead(relePin == HIGH) && Input <= Setpoint-securityBand)
+    if(digitalRead(relePin == HIGH) && Input <= 70-securityBand)
     {
       digitalWrite(relePin, LOW); //Cierro la válvula
     }
